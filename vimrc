@@ -104,7 +104,6 @@ call plug#begin("$VIMHOME/plugged")
   Plug 'tpope/vim-fugitive'
   Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
   Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
-  Plug 'scrooloose/nerdcommenter'
   Plug 'scrooloose/vim-statline'
   Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
   Plug 'rust-lang/rust.vim', { 'for': 'rust' }
@@ -123,7 +122,7 @@ call plug#begin("$VIMHOME/plugged")
   Plug 'mox-mox/vim-localsearch'
   Plug 'romainl/vim-cool'
   Plug 'christoomey/vim-tmux-navigator', { 'on': ['TmuxNavigateLeft', 'TmuxNavigateDown', 'TmuxNavigateUp', 'TmuxNavigateRight', 'TmuxNavigatePrevious'] }
-
+  Plug 'tomtom/tcomment_vim'
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
   Plug 'scrooloose/syntastic', LoadIf(!useNeomake)
   Plug 'neomake/neomake', LoadIf(useNeomake)
@@ -131,6 +130,7 @@ call plug#begin("$VIMHOME/plugged")
 
   Plug 'roxma/nvim-yarp', LoadIf(has('nvim'))
   Plug 'roxma/vim-hug-neovim-rpc', LoadIf(has('nvim'))
+
   call SourceIfExists(g:rc_files['plug'])
 call plug#end()
 call SourceIfExists(g:rc_files['post'])
@@ -154,13 +154,6 @@ let g:airline_theme='one'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
-
-" Commenting
-let g:NERDSpaceDelims = 1
-let g:NERDCompactSexyComs = 1
-let g:NERDDefaultAlign = 'left'
-let g:NERDCommentEmptyLines = 1
-let g:NERDTrimTrailingWhitespace = 1
 
 augroup PsoxNERDTree
   autocmd!
@@ -319,8 +312,57 @@ if has_key(plugs, 'vim-tmux-navigator')
   nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 endif
 
+""""""""""""""""""""""""""""""""""""" LEADER KEY BINDINGS""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader ="\<Space>"
+let g:mapleader = "\<Space>"
+" markdown to html
+nmap <leader>md :%!markdown --html4tags <cr>
+"inset semicolon to end of the line
+inoremap <leader>; <c-o>A;
+inoremap <leader>, <c-o>A,
+inoremap <leader>. <c-o>A.
+inoremap <leader>] <c-o>A]
+inoremap <leader>} <c-o>A}
+inoremap <leader>) <c-o>A)
+inoremap <leader><space> <c-o>A
+
+nnoremap <leader>h :tabprevious<CR>
+nnoremap <leader>l :tabnext<CR>
+nnoremap <leader>t :tabnew<CR>
+nnoremap <leader>w :tabclose<CR>
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>6 6gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
+nnoremap <leader>9 9gt
+map <leader>o o<ESC>
+map <leader>O O<ESC>
+" console.log word under cursor
+nmap <leader>cl yiwoconsole.log('<c-r>"', <c-r>");<esc>^
+" noremap <leader>t :tab all<esc>
+noremap <leader>d :r!date<esc>
+noremap <leader>n :E<esc>
+noremap <leader>s :w !sudo tee %<esc>
+noremap <leader>q :s/\"\(.*\)\"/\'\1\'<esc>
+
+" search for word under the cursor
+nnoremap <leader>/ "fyiw :/<c-r>f<cr>
+vmap <leader>" S"lvi"
+vmap <leader>' S'lvi'
+vmap <leader>` S`lvi`
+vmap <leader>( S)lvi(
+vmap <leader>{ S}lvi{
+vmap <leader>[ S]lvi[
+vmap <leader>< S>lvi<
+noremap <c-p> <Esc>:FZF<CR>
+let g:fzf_layout = { 'down': '~25%'}
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree Toggle
-nnoremap <F2> :NERDTreeToggle<CR>
+nnoremap <F1> :NERDTreeToggle<CR>
 
 " Workaround for writing readonly files
 cnoremap w!! w !sudo tee % > /dev/null
